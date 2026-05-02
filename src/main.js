@@ -8,10 +8,15 @@ function ss(e0, e1, x) {
 const easeOutExpo  = t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
 
-const PAGES = 6;
+/*  scroll map:
+    0–1  opener
+    1–2  p1 (services)
+    2–3  p2 (security)
+    3–5  final: tilt rise + settle
+*/
+const PAGES = 4;
 let vh = window.innerHeight;
 
-/* ── Scrollable height ── */
 document.documentElement.style.height = 'auto';
 
 const spacer = document.createElement('div');
@@ -39,10 +44,13 @@ const finalEl = document.getElementById('final');
 const grid    = document.getElementById('final-grid');
 const wm      = document.getElementById('wm');
 
-const panels = ['p1','p2','p3','p4'].map(id => {
+const panels = ['p1','p2'].map(id => {
   const el = document.getElementById(id);
   return { el, words: [...el.querySelectorAll('.word')], eye: el.querySelector('.t-eye'), sub: el.querySelector('.t-sub') };
 });
+
+// p1=light(245), p2=dark(8), final=white(255)
+const panelBrightness = [0, 245, 8, 255];
 
 p0.style.zIndex = '10';
 panels.forEach(({ el, words, eye, sub }, i) => {
@@ -56,25 +64,25 @@ finalEl.style.zIndex = '0';
 
 setTimeout(() => p0.classList.add('go'), 80);
 
-/*
-  Panel backgrounds (0=opener dark, 1=light, 2=dark, 3=light, 4=dark, 5=final white)
-  0 → bg brightness 0 (black)  → logo should be white (high value)
-  1 → bg brightness 245        → logo should be black (low value)
-  2 → bg brightness 8          → logo white
-  3 → bg brightness 245        → logo black
-  4 → bg brightness 8          → logo white
-  5 → bg brightness 255 (white)→ logo black
-*/
-const panelBrightness = [0, 245, 8, 245, 8, 255];
+/* Panel hover — JS-driven to bypass pointer-events/perspective interference */
+const fpanels = [...document.querySelectorAll('.fpanel')];
+fpanels.forEach(panel => {
+  panel.addEventListener('mouseenter', () => {
+    fpanels.forEach(p => p.classList.remove('hovered'));
+    panel.classList.add('hovered');
+  });
+  panel.addEventListener('mouseleave', () => {
+    panel.classList.remove('hovered');
+  });
+});
 
 function wmColorForSlot(slot) {
-  if (slot >= 5) return 0; // final white bg → black logo
-  const i = Math.floor(clamp(slot, 0, 4));
+  if (slot >= 3) return 0;
+  const i = Math.floor(clamp(slot, 0, 2));
   const frac = slot - i;
   const a = panelBrightness[i];
-  const b = panelBrightness[Math.min(i + 1, 5)];
+  const b = panelBrightness[Math.min(i + 1, 3)];
   const bg = a + (b - a) * easeOutQuart(clamp(frac, 0, 1));
-  // invert: dark bg → white logo, light bg → dark logo
   return bg < 128 ? 255 : 0;
 }
 
@@ -87,16 +95,26 @@ function render(scroll) {
   pbar.style.width = (clamp(slot / (PAGES - 1), 0, 1) * 100) + '%';
   slot > 0.08 ? cue.classList.add('gone') : cue.classList.remove('gone');
 
-  /* Opener */
-  const p0t = ss(0.1, 0.9, slot);
+  /* Opener — exits quickly so user sees content fast */
+  const p0t = ss(0.05, 0.6, slot);
   p0.style.opacity   = String(1 - p0t);
   p0.style.transform = `scale(${1 - p0t * 0.04}) translateY(${-p0t * 60}px)`;
-  p0.style.zIndex    = slot < 0.95 ? '10' : '0';
+  p0.style.zIndex    = slot < 0.65 ? '10' : '0';
 
   /* Text panels */
   panels.forEach(({ el, words, eye, sub }, i) => {
     const localT = slot - (i + 1);
     el.style.clipPath = `inset(${((1 - ss(-1.0, 0.0, localT)) * 100).toFixed(2)}% 0 0 0)`;
+    // p2 fades to white as final rises over it
+    if (i === 1) {
+      const fadeT = easeOutQuart(clamp((slot - 2.0) / 0.5, 0, 1));
+      const bg = Math.round(fadeT * 255);
+      el.style.background = `rgb(${bg},${bg},${bg})`;
+      const textOpacity = 1 - fadeT;
+      if (el.querySelector('.t-eye')) el.querySelector('.t-eye').style.opacity = String(textOpacity);
+      if (el.querySelector('.t-sub')) el.querySelector('.t-sub').style.opacity = String(textOpacity);
+      el.querySelectorAll('.word').forEach(w => w.style.opacity = String(Math.min(parseFloat(w.style.opacity || 1), textOpacity)));
+    }
     el.style.zIndex   = String(i + 1);
     const revT = ss(-0.9, 0.0, localT);
     words.forEach((w, wi) => {
@@ -118,30 +136,23 @@ function render(scroll) {
     }
   });
 
-  /* Final section */
-  finalEl.style.pointerEvents = slot >= 4.95 ? 'all' : 'none';
-  finalEl.style.zIndex        = slot >= 4.0 ? '200' : '0';
+  /* Final section — videos rise over p2 text, bg only fills near the end */
+  finalEl.style.pointerEvents = slot >= 2.7 ? 'all' : 'none';
+  finalEl.style.zIndex        = slot >= 2.0 ? '200' : '0';
 
-  const enterT     = easeOutQuart(clamp((slot - 4) / 1, 0, 1));
+  const enterT     = easeOutQuart(clamp((slot - 2) / 0.7, 0, 1));
   const translateY = (1 - enterT) * 100;
   const rotX       = 55 * (1 - enterT);
   const scl        = 1.2 - 0.2 * enterT;
 
-  // bg: black at slot 4.0, white by slot 4.4
-  if (slot < 4.0) {
-    finalEl.style.background = 'transparent';
-  } else {
-    const bgT = easeOutQuart(clamp((slot - 4.0) / 0.4, 0, 1));
-    const bg = Math.round(bgT * 255);
-    finalEl.style.background = `rgb(${bg},${bg},${bg})`;
-  }
+  finalEl.style.background = 'transparent';
 
   grid.style.transform = `translateY(${translateY.toFixed(2)}vh) rotateX(${rotX.toFixed(2)}deg) scale(${scl.toFixed(3)})`;
 
-  /* Watermark chameleon color — smooth lerp toward target, fade out on p5 */
+  /* Watermark — fades out as final rises */
   wmTarget = wmColorForSlot(slot);
   wmCurrent += (wmTarget - wmCurrent) * 0.08;
-  const wmOpacity = (1 - easeOutQuart(clamp((slot - 4.0) / 0.4, 0, 1))) * 0.35;
+  const wmOpacity = (1 - easeOutQuart(clamp((slot - 2.0) / 0.4, 0, 1))) * 0.35;
   wm.style.color = `rgba(${Math.round(wmCurrent)},${Math.round(wmCurrent)},${Math.round(wmCurrent)},${wmOpacity.toFixed(3)})`;
 }
 
