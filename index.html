@@ -1,88 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Suhaili</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Plus+Jakarta+Sans:wght@200;300&family=DM+Sans:wght@200;300&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/src/style.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Suhaili</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
 </head>
+
 <body>
 
-<div id="app">
+  <div id="app">
 
-  <!-- OPENER -->
-  <div id="p0">
-    <div class="logo-row">
-      <div class="logo-block">
-        <img class="logo-img" src="https://res.cloudinary.com/dfc0qnh88/image/upload/v1777735173/SuhailiService_ejhbo7.png" alt="Suhaili Services"/>
-        <span class="logo-label">Service &amp; Facility</span>
+    <!-- Background videos -->
+    <div id="bg-split">
+      <div class="bg-half" id="bg-left">
+        <video src="https://res.cloudinary.com/dfc0qnh88/video/upload/v1777745323/Video_Project_11_janir8.mp4" autoplay
+          muted loop playsinline></video>
       </div>
-      <div class="logo-vline"></div>
-      <div class="logo-block">
-        <img class="logo-img" src="https://res.cloudinary.com/dfc0qnh88/image/upload/v1777735173/SuhailSecurityLogo_ol7kix.png" alt="Suhaili Security"/>
-        <span class="logo-label">Professional Security</span>
+      <div class="bg-half" id="bg-right">
+        <video src="https://res.cloudinary.com/dfc0qnh88/video/upload/v1777735195/SuhailiSecurity_fg6tac.mp4" autoplay
+          muted loop playsinline></video>
       </div>
     </div>
-    <div id="cue">
-      <span class="cue-txt">Scroll to explore</span>
-      <div class="cue-arrow">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+
+    <!-- Layered overlays -->
+    <div id="bg-overlay"></div>
+    <div id="vignette"></div>
+
+    <!-- Ambient blobs -->
+    <div id="blobs">
+      <div class="blob blob-blue"></div>
+      <div class="blob blob-red"></div>
+      <div class="blob blob-center"></div>
     </div>
-  </div>
 
-  <!-- P1 -->
-  <div class="tpanel" id="p1">
-    <span class="t-eye">Suhaili Services</span>
-    <div class="t-head f-service">
-      <span class="t-line"><span class="word">Precision</span><span class="word">in</span><span class="word">every</span></span>
-      <span class="t-line"><span class="word">detail.</span></span>
-    </div>
-    <span class="t-sub">Service &amp; Facility Management</span>
-  </div>
+    <!-- Content -->
+    <div id="content">
 
-  <!-- P2 -->
-  <div class="tpanel" id="p2">
-    <span class="t-eye">Suhaili Security</span>
-    <div class="t-head f-security">
-      <span class="t-line"><span class="word">Your</span><span class="word">safety.</span></span>
-      <span class="t-line"><span class="word">Our</span><span class="word">mission.</span></span>
-    </div>
-    <span class="t-sub">Professional Security Solutions</span>
-  </div>
+      <div id="top-label">Two Visions, One Purpose.</div>
 
-</div><!-- /app -->
-
-<div id="pbar"></div>
-
-<!-- FINAL SPLIT — fixed, driven by scroll -->
-<div id="final">
-  <p id="wm">Suhaili</p>
-  <div id="final-grid">
-    <a class="fpanel" href="https://www.suhaili-services.de/" target="_blank" rel="noopener">
-      <video src="https://res.cloudinary.com/dfc0qnh88/video/upload/v1777735190/SuhailiService_quqdew.mp4" autoplay muted loop playsinline></video>
-      <div class="fpanel-info">
-        <span class="fpanel-label">Service &amp; Facility</span>
-        <h2 class="fpanel-name fpanel-name-svc">Suhaili<br>Services</h2>
-        <div class="marrow">Enter <svg viewBox="0 0 22 10"><line x1="0" y1="5" x2="20" y2="5"/><polyline points="15,1 20,5 15,9"/></svg></div>
+      <div id="hero-text">
+        <h1 id="hero-title">
+          <span class="ht-line">
+            <span class="ht-word ht-plain">A </span><span class="ht-word ht-glow-blue">strong</span><span
+              class="ht-word ht-plain"> partner,</span>
+          </span>
+          <span class="ht-line">
+            <span class="ht-word ht-plain">Your </span><span class="ht-word ht-glow-red">full-service</span><span
+              class="ht-word ht-plain"> provider.</span>
+          </span>
+        </h1>
       </div>
-    </a>
-    <a class="fpanel" href="https://www.suhaili-security.de/" target="_blank" rel="noopener">
-      <video src="https://res.cloudinary.com/dfc0qnh88/video/upload/v1777735195/SuhailiSecurity_fg6tac.mp4" autoplay muted loop playsinline></video>
-      <div class="fpanel-info">
-        <span class="fpanel-label">Security Solutions</span>
-        <h2 class="fpanel-name fpanel-name-sec">Suhaili<br>Security</h2>
-        <div class="marrow">Enter <svg viewBox="0 0 22 10"><line x1="0" y1="5" x2="20" y2="5"/><polyline points="15,1 20,5 15,9"/></svg></div>
-      </div>
-    </a>
-  </div>
-</div>
 
-<script type="module" src="/src/main.js"></script>
+      <div id="cards">
+
+        <a class="card" id="card-svc" href="https://www.suhaili-services.de/" target="_blank" rel="noopener">
+          <img class="card-logo"
+            src="https://res.cloudinary.com/dfc0qnh88/image/upload/v1777735173/SuhailiService_ejhbo7.png"
+            alt="Suhaili Services" />
+          <h2 class="card-name card-name-svc">Suhaili<span> Services</span></h2>
+          <div class="card-divider card-divider-svc"></div>
+          <p class="card-desc">Service &amp; Facility Management<br>for a smarter tomorrow.</p>
+          <div class="lm-btn-wrap">
+            <button class="lm-btn lm-btn-svc">Visit Website <svg viewBox="0 0 22 10">
+                <line x1="0" y1="5" x2="20" y2="5" />
+                <polyline points="15,1 20,5 15,9" />
+              </svg></button>
+          </div>
+        </a>
+
+        <a class="card" id="card-sec" href="https://www.suhaili-security.de/" target="_blank" rel="noopener">
+          <img class="card-logo"
+            src="https://res.cloudinary.com/dfc0qnh88/image/upload/v1777735173/SuhailSecurityLogo_ol7kix.png"
+            alt="Suhaili Security" />
+          <h2 class="card-name card-name-sec">Suhaili<span> Security</span></h2>
+          <div class="card-divider card-divider-sec"></div>
+          <p class="card-desc">Professional Security Solutions<br>protecting what matters most.</p>
+          <div class="lm-btn-wrap">
+            <button class="lm-btn lm-btn-sec">Visit Website <svg viewBox="0 0 22 10">
+                <line x1="0" y1="5" x2="20" y2="5" />
+                <polyline points="15,1 20,5 15,9" />
+              </svg></button>
+          </div>
+        </a>
+
+      </div>
+
+
+      <!-- Scroll-down cue — nudges users to discover the testimonials section -->
+      <div id="scroll-cue" aria-label="Scroll down to read testimonials">
+        <div id="scroll-cue-chevrons">
+          <!-- Two stacked chevrons that cascade in opacity like the reference -->
+          <svg class="scroll-chevron" viewBox="0 0 24 12" fill="none">
+            <polyline points="2,2 12,10 22,2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <svg class="scroll-chevron" viewBox="0 0 24 12" fill="none">
+            <polyline points="2,2 12,10 22,2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ── TESTIMONIALS SECTION ─────────────────────────────────────── -->
+  <section id="testimonials">
+
+    <!-- Heading -->
+    <div id="testimonials-header">
+      <div id="testimonials-eyebrow-row">
+        <span class="t-rule"></span>
+        <span id="testimonials-eyebrow">Trusted Worldwide</span>
+        <span class="t-rule"></span>
+      </div>
+      <h2 id="testimonials-title">
+        What our <span class="t-glow-blue">clients</span> say
+      </h2>
+    </div>
+
+    <!-- 3D card wall — copied 1:1 from suhaili-security-main pattern:
+       perspective + overflow:hidden wrapper, fades INSIDE that wrapper
+       as siblings of the testi-wall div so they paint on top correctly -->
+    <div id="testi-viewport">
+
+      <!-- Tilted column group -->
+      <div id="testi-wall">
+        <div class="tcol" data-dir="down">
+          <div class="ttrack"></div>
+        </div>
+        <div class="tcol" data-dir="up">
+          <div class="ttrack"></div>
+        </div>
+        <div class="tcol" data-dir="down">
+          <div class="ttrack"></div>
+        </div>
+        <div class="tcol" data-dir="up">
+          <div class="ttrack"></div>
+        </div>
+      </div>
+
+      <!-- Fades: siblings of testi-wall, inside the overflow:hidden viewport -->
+      <div class="t-fade-v"></div>
+      <div class="t-fade-h"></div>
+
+    </div>
+
+  </section>
+
+  <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>

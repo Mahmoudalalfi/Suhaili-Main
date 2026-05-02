@@ -1,162 +1,149 @@
-import Lenis from 'lenis';
+const testimonials = [
+  { name: 'Klaus Bauer',    handle: '@klausbauer', body: 'Suhaili Services transformed our facility management — reliable, professional, and always on time.', img: 'https://randomuser.me/api/portraits/men/34.jpg',   flag: '🇩🇪', country: 'Germany'     },
+  { name: 'Amira Hassan',   handle: '@amiraH',     body: 'Outstanding security team. We feel protected around the clock thanks to Suhaili Security.',          img: 'https://randomuser.me/api/portraits/women/44.jpg', flag: '🇪🇬', country: 'Egypt'       },
+  { name: 'Pierre Dubois',  handle: '@pierre_d',   body: 'Exceptional cleaning and maintenance service. Our office has never looked better.',                   img: 'https://randomuser.me/api/portraits/men/22.jpg',   flag: '🇫🇷', country: 'France'      },
+  { name: 'Sofia Muller',   handle: '@sofiam',     body: 'Their security guards are well-trained and courteous — perfect for corporate events.',                img: 'https://randomuser.me/api/portraits/women/55.jpg', flag: '🇦🇹', country: 'Austria'     },
+  { name: 'Omar Al-Rashid', handle: '@omar_ar',    body: 'Suhaili Services handles our entire building operations seamlessly.',                                 img: 'https://randomuser.me/api/portraits/men/61.jpg',   flag: '🇦🇪', country: 'UAE'         },
+  { name: 'Laura Schmidt',  handle: '@lauras',     body: 'Fast response, friendly staff, and true professionalism every single visit.',                        img: 'https://randomuser.me/api/portraits/women/32.jpg', flag: '🇨🇭', country: 'Switzerland' },
+  { name: 'Yusuf Kaya',     handle: '@yusufk',     body: 'Night security patrols gave us complete peace of mind for our warehouse.',                           img: 'https://randomuser.me/api/portraits/men/47.jpg',   flag: '🇹🇷', country: 'Turkey'      },
+  { name: 'Elena Petrova',  handle: '@elenapv',    body: 'The facility team is discreet, efficient, and always goes the extra mile.',                          img: 'https://randomuser.me/api/portraits/women/68.jpg', flag: '🇷🇺', country: 'Russia'      },
+  { name: 'Jan de Vries',   handle: '@jandv',      body: 'Contracted Suhaili Security for our retail chain — best decision we made.',                          img: 'https://randomuser.me/api/portraits/men/85.jpg',   flag: '🇳🇱', country: 'Netherlands' },
+  { name: 'Fatima Zahra',   handle: '@fatimaz',    body: 'Top-tier service quality that matches our brand standards perfectly.',                               img: 'https://randomuser.me/api/portraits/women/12.jpg', flag: '🇲🇦', country: 'Morocco'     },
+];
 
-const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-function ss(e0, e1, x) {
-  const t = clamp((x - e0) / (e1 - e0), 0, 1);
-  return t * t * (3 - 2 * t);
-}
-const easeOutExpo  = t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+// Build card — portrait photo as avatar, flag emoji next to name
+function buildCard(t) {
+  const card = document.createElement('div');
+  card.className = 't-card';
 
-/*  scroll map:
-    0–1  opener
-    1–2  p1 (services)
-    2–3  p2 (security)
-    3–5  final: tilt rise + settle
-*/
-const PAGES = 4;
-let vh = window.innerHeight;
+  const header = document.createElement('div');
+  header.className = 't-card-header';
 
-document.documentElement.style.height = 'auto';
+  // Portrait photo
+  const avatar = document.createElement('img');
+  avatar.className = 't-avatar';
+  avatar.src = t.img;
+  avatar.alt = t.name;
+  avatar.loading = 'lazy';
+  avatar.addEventListener('error', function () { this.style.visibility = 'hidden'; });
 
-const spacer = document.createElement('div');
-spacer.style.cssText = 'position:relative;width:1px;pointer-events:none;z-index:-1;flex-shrink:0;';
-function resize() {
-  vh = window.innerHeight;
-  spacer.style.height = (PAGES * vh) + 'px';
-}
-resize();
-document.body.appendChild(spacer);
-window.addEventListener('resize', resize);
+  const meta = document.createElement('div');
+  meta.className = 't-card-meta';
 
-const lenis = new Lenis({
-  duration: 1.8,
-  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  smoothWheel: true,
-  wheelMultiplier: 0.85,
-  touchMultiplier: 2,
-});
+  // Name row: "Klaus Bauer 🇩🇪"
+  const nameEl = document.createElement('span');
+  nameEl.className = 't-card-name';
+  nameEl.appendChild(document.createTextNode(t.name + ' '));
 
-const p0      = document.getElementById('p0');
-const pbar    = document.getElementById('pbar');
-const cue     = document.getElementById('cue');
-const finalEl = document.getElementById('final');
-const grid    = document.getElementById('final-grid');
-const wm      = document.getElementById('wm');
+  const flagEl = document.createElement('span');
+  flagEl.className = 't-card-flag';
+  flagEl.textContent = t.flag;
+  flagEl.setAttribute('role', 'img');
+  flagEl.setAttribute('aria-label', t.country);
+  nameEl.appendChild(flagEl);
 
-const panels = ['p1','p2'].map(id => {
-  const el = document.getElementById(id);
-  return { el, words: [...el.querySelectorAll('.word')], eye: el.querySelector('.t-eye'), sub: el.querySelector('.t-sub') };
-});
+  const handleEl = document.createElement('span');
+  handleEl.className = 't-card-handle';
+  handleEl.textContent = t.handle;
 
-// p1=light(245), p2=dark(8), final=white(255)
-const panelBrightness = [0, 245, 8, 255];
+  meta.appendChild(nameEl);
+  meta.appendChild(handleEl);
 
-p0.style.zIndex = '10';
-panels.forEach(({ el, words, eye, sub }, i) => {
-  el.style.zIndex   = String(i + 1);
-  el.style.clipPath = 'inset(100% 0 0 0)';
-  words.forEach(w => { w.style.transform = 'translateY(100%)'; w.style.opacity = '0'; });
-  if (eye) { eye.style.opacity = '0'; eye.style.transform = 'translateY(16px)'; }
-  if (sub) { sub.style.opacity = '0'; sub.style.transform = 'translateY(12px)'; }
-});
-finalEl.style.zIndex = '0';
+  header.appendChild(avatar);
+  header.appendChild(meta);
 
-setTimeout(() => p0.classList.add('go'), 80);
+  const bodyEl = document.createElement('p');
+  bodyEl.className = 't-card-body';
+  bodyEl.textContent = '"' + t.body + '"';
 
-/* Panel hover — JS-driven to bypass pointer-events/perspective interference */
-const fpanels = [...document.querySelectorAll('.fpanel')];
-fpanels.forEach(panel => {
-  panel.addEventListener('mouseenter', () => {
-    fpanels.forEach(p => p.classList.remove('hovered'));
-    panel.classList.add('hovered');
-  });
-  panel.addEventListener('mouseleave', () => {
-    panel.classList.remove('hovered');
-  });
-});
-
-function wmColorForSlot(slot) {
-  if (slot >= 3) return 0;
-  const i = Math.floor(clamp(slot, 0, 2));
-  const frac = slot - i;
-  const a = panelBrightness[i];
-  const b = panelBrightness[Math.min(i + 1, 3)];
-  const bg = a + (b - a) * easeOutQuart(clamp(frac, 0, 1));
-  return bg < 128 ? 255 : 0;
+  card.appendChild(header);
+  card.appendChild(bodyEl);
+  return card;
 }
 
-let wmTarget = 255;
-let wmCurrent = 255;
+// 10 testimonials split across 4 columns with enough variety per column
+const COL_A = testimonials.slice(0, 5);                                    // 0-4
+const COL_B = testimonials.slice(5, 10);                                   // 5-9
+const COL_C = [...testimonials.slice(2, 7)];                               // 2-6
+const COL_D = [...testimonials.slice(7, 10), ...testimonials.slice(0, 3)]; // 7-9 + 0-2
+const COLS  = [COL_A, COL_B, COL_C, COL_D];
 
-function render(scroll) {
-  const slot = clamp(scroll, 0, PAGES * vh) / vh;
-
-  pbar.style.width = (clamp(slot / (PAGES - 1), 0, 1) * 100) + '%';
-  slot > 0.08 ? cue.classList.add('gone') : cue.classList.remove('gone');
-
-  /* Opener — exits quickly so user sees content fast */
-  const p0t = ss(0.05, 0.6, slot);
-  p0.style.opacity   = String(1 - p0t);
-  p0.style.transform = `scale(${1 - p0t * 0.04}) translateY(${-p0t * 60}px)`;
-  p0.style.zIndex    = slot < 0.65 ? '10' : '0';
-
-  /* Text panels */
-  panels.forEach(({ el, words, eye, sub }, i) => {
-    const localT = slot - (i + 1);
-    el.style.clipPath = `inset(${((1 - ss(-1.0, 0.0, localT)) * 100).toFixed(2)}% 0 0 0)`;
-    // p2 fades to white as final rises over it
-    if (i === 1) {
-      const fadeT = easeOutQuart(clamp((slot - 2.0) / 0.5, 0, 1));
-      const bg = Math.round(fadeT * 255);
-      el.style.background = `rgb(${bg},${bg},${bg})`;
-      const textOpacity = 1 - fadeT;
-      if (el.querySelector('.t-eye')) el.querySelector('.t-eye').style.opacity = String(textOpacity);
-      if (el.querySelector('.t-sub')) el.querySelector('.t-sub').style.opacity = String(textOpacity);
-      el.querySelectorAll('.word').forEach(w => w.style.opacity = String(Math.min(parseFloat(w.style.opacity || 1), textOpacity)));
+// Populate columns — cards tripled so the -33.333% loop never shows a seam
+function initTestimonials() {
+  const cols = document.querySelectorAll('.tcol');
+  if (!cols.length) return;
+  cols.forEach(function (col, i) {
+    const track = col.querySelector('.ttrack');
+    const items = COLS[i] || COLS[0];
+    for (let pass = 0; pass < 3; pass++) {
+      items.forEach(function (t) { track.appendChild(buildCard(t)); });
     }
-    el.style.zIndex   = String(i + 1);
-    const revT = ss(-0.9, 0.0, localT);
-    words.forEach((w, wi) => {
-      const stagger = wi * 0.07;
-      const wt = clamp((revT - stagger) / (1 - Math.min(stagger, 0.75)), 0, 1);
-      const ez = easeOutExpo(wt);
-      w.style.transform = `translateY(${((1 - ez) * 100).toFixed(2)}%)`;
-      w.style.opacity   = String(clamp(wt * 4, 0, 1));
+  });
+}
+
+initTestimonials();
+
+// Scroll cue: fade out once user starts scrolling
+const scrollCue = document.getElementById('scroll-cue');
+if (scrollCue) {
+  window.addEventListener('scroll', function () {
+    scrollCue.classList.toggle('hidden', window.scrollY > 40);
+  }, { passive: true });
+}
+
+// Testimonials fade-in — make visible immediately if already in viewport on load
+const testiSection = document.getElementById('testimonials');
+if (testiSection) {
+  const showTesti = function () {
+    testiSection.classList.add('visible');
+  };
+  const rect = testiSection.getBoundingClientRect();
+  if (rect.top < window.innerHeight) {
+    // Already visible on load (e.g. browser restored scroll position)
+    showTesti();
+  } else {
+    const observer = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        showTesti();
+        observer.disconnect();
+      }
+    }, { threshold: 0 });
+    observer.observe(testiSection);
+  }
+}
+
+// Force all background videos to play — browsers sometimes block autoplay on load
+document.querySelectorAll('#bg-split video').forEach(function (vid) {
+  vid.muted = true;
+  var p = vid.play();
+  if (p !== undefined) {
+    p.catch(function () {
+      // Retry on first user interaction if autoplay was blocked
+      document.addEventListener('click', function () { vid.play(); }, { once: true });
+      document.addEventListener('touchstart', function () { vid.play(); }, { once: true });
     });
-    if (eye) {
-      const et = clamp(ss(-0.92, -0.12, localT), 0, 1);
-      eye.style.opacity   = String(et);
-      eye.style.transform = `translateY(${((1 - easeOutQuart(et)) * 16).toFixed(2)}px)`;
-    }
-    if (sub) {
-      const st = clamp(ss(-0.65, 0.05, localT), 0, 1);
-      sub.style.opacity   = String(st);
-      sub.style.transform = `translateY(${((1 - easeOutQuart(st)) * 12).toFixed(2)}px)`;
-    }
+  }
+});
+
+// Hero background split interactions
+const bgSplit = document.getElementById('bg-split');
+const cardSvc = document.getElementById('card-svc');
+const cardSec = document.getElementById('card-sec');
+
+cardSvc.addEventListener('mouseenter', () => { bgSplit.classList.add('hover-left');  bgSplit.classList.remove('hover-right'); });
+cardSvc.addEventListener('mouseleave', () => { bgSplit.classList.remove('hover-left'); });
+cardSec.addEventListener('mouseenter', () => { bgSplit.classList.add('hover-right'); bgSplit.classList.remove('hover-left'); });
+cardSec.addEventListener('mouseleave', () => { bgSplit.classList.remove('hover-right'); });
+
+// Ripple effect on liquid metal buttons
+document.querySelectorAll('.lm-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    const r = document.createElement('span');
+    r.className = 'lm-ripple';
+    const rect = btn.getBoundingClientRect();
+    r.style.left = (e.clientX - rect.left) + 'px';
+    r.style.top  = (e.clientY - rect.top)  + 'px';
+    btn.appendChild(r);
+    setTimeout(() => r.remove(), 600);
   });
-
-  /* Final section — videos rise over p2 text, bg only fills near the end */
-  finalEl.style.pointerEvents = slot >= 2.7 ? 'all' : 'none';
-  finalEl.style.zIndex        = slot >= 2.0 ? '200' : '0';
-
-  const enterT     = easeOutQuart(clamp((slot - 2) / 0.7, 0, 1));
-  const translateY = (1 - enterT) * 100;
-  const rotX       = 55 * (1 - enterT);
-  const scl        = 1.2 - 0.2 * enterT;
-
-  finalEl.style.background = 'transparent';
-
-  grid.style.transform = `translateY(${translateY.toFixed(2)}vh) rotateX(${rotX.toFixed(2)}deg) scale(${scl.toFixed(3)})`;
-
-  /* Watermark — fades out as final rises */
-  wmTarget = wmColorForSlot(slot);
-  wmCurrent += (wmTarget - wmCurrent) * 0.08;
-  const wmOpacity = (1 - easeOutQuart(clamp((slot - 2.0) / 0.4, 0, 1))) * 0.35;
-  wm.style.color = `rgba(${Math.round(wmCurrent)},${Math.round(wmCurrent)},${Math.round(wmCurrent)},${wmOpacity.toFixed(3)})`;
-}
-
-lenis.on('scroll', ({ scroll }) => render(scroll));
-function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-requestAnimationFrame(raf);
-render(0);
+});
