@@ -125,17 +125,21 @@ if (testiSection) {
   }
 }
 
-// Force all background videos to play — browsers sometimes block autoplay on load
+// Force all background videos to play — iOS Safari requires these attributes set via JS
 document.querySelectorAll('#bg-split video').forEach(function (vid) {
   vid.muted = true;
-  var p = vid.play();
-  if (p !== undefined) {
-    p.catch(function () {
-      // Retry on first user interaction if autoplay was blocked
-      document.addEventListener('click', function () { vid.play(); }, { once: true });
-      document.addEventListener('touchstart', function () { vid.play(); }, { once: true });
-    });
-  }
+  vid.setAttribute('playsinline', '');
+  vid.setAttribute('webkit-playsinline', '');
+  vid.load();
+  var tryPlay = function () {
+    var p = vid.play();
+    if (p !== undefined) {
+      p.catch(function () {});
+    }
+  };
+  tryPlay();
+  document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+  document.addEventListener('click', tryPlay, { once: true });
 });
 
 // Hero background split interactions
