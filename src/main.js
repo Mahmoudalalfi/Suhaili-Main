@@ -1,3 +1,16 @@
+import Lenis from 'lenis';
+
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+});
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+
 const testimonials = [
   { name: 'Klaus Bauer',    handle: '@klausbauer', body: 'Suhaili Services transformed our facility management — reliable, professional, and always on time.', img: 'https://randomuser.me/api/portraits/men/34.jpg',   flag: '🇩🇪', country: 'Germany'     },
   { name: 'Amira Hassan',   handle: '@amiraH',     body: 'Outstanding security team. We feel protected around the clock thanks to Suhaili Security.',          img: 'https://randomuser.me/api/portraits/women/44.jpg', flag: '🇪🇬', country: 'Egypt'       },
@@ -86,9 +99,9 @@ initTestimonials();
 // Scroll cue: fade out once user starts scrolling
 const scrollCue = document.getElementById('scroll-cue');
 if (scrollCue) {
-  window.addEventListener('scroll', function () {
-    scrollCue.classList.toggle('hidden', window.scrollY > 40);
-  }, { passive: true });
+  lenis.on('scroll', ({ scroll }) => {
+    scrollCue.classList.toggle('hidden', scroll > 40);
+  });
 }
 
 // Testimonials fade-in — make visible immediately if already in viewport on load
