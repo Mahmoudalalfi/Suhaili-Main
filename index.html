@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Suhaili</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Plus+Jakarta+Sans:wght@200;300&family=DM+Sans:wght@200;300&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/src/style.css"/>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- OPENER -->
+  <div id="p0">
+    <div class="logo-row">
+      <div class="logo-block">
+        <img class="logo-img" src="/SuhailiService.png" alt="Suhaili Services"/>
+        <span class="logo-label">Service &amp; Facility</span>
+      </div>
+      <div class="logo-vline"></div>
+      <div class="logo-block">
+        <img class="logo-img" src="/SuhailSecurityLogo.png" alt="Suhaili Security"/>
+        <span class="logo-label">Professional Security</span>
+      </div>
+    </div>
+    <div id="cue">
+      <span class="cue-txt">Scroll</span>
+      <div class="cue-line"></div>
+    </div>
+  </div>
+
+  <!-- P1 -->
+  <div class="tpanel" id="p1">
+    <span class="t-eye">Suhaili Services</span>
+    <div class="t-head f-service">
+      <span class="t-line"><span class="word">Precision</span><span class="word">in</span><span class="word">every</span></span>
+      <span class="t-line"><span class="word">detail.</span></span>
+    </div>
+    <span class="t-sub">Service &amp; Facility Management</span>
+  </div>
+
+  <!-- P2 -->
+  <div class="tpanel" id="p2">
+    <span class="t-eye">What we deliver</span>
+    <div class="t-head f-service">
+      <span class="t-line"><span class="word">Spaces</span><span class="word">that</span></span>
+      <span class="t-line"><span class="word">perform.</span></span>
+    </div>
+    <span class="t-sub">Built for excellence</span>
+  </div>
+
+  <!-- P3 -->
+  <div class="tpanel" id="p3">
+    <span class="t-eye">Suhaili Security</span>
+    <div class="t-head f-security">
+      <span class="t-line"><span class="word">Your</span><span class="word">safety.</span></span>
+      <span class="t-line"><span class="word">Our</span><span class="word">mission.</span></span>
+    </div>
+    <span class="t-sub">Professional Security Solutions</span>
+  </div>
+
+  <!-- P4 -->
+  <div class="tpanel" id="p4">
+    <span class="t-eye">Our promise</span>
+    <div class="t-head f-security">
+      <span class="t-line"><span class="word">No</span></span>
+      <span class="t-line"><span class="word">compromise.</span></span>
+    </div>
+    <span class="t-sub">Vigilance. Integrity. Results.</span>
+  </div>
+
+</div><!-- /app -->
+
+<div id="pbar"></div>
+
+<!-- FINAL SPLIT — fixed, driven by scroll -->
+<div id="final">
+  <p id="wm">Suhaili</p>
+  <div id="final-grid">
+    <a class="fpanel" href="https://www.suhaili-services.de/" target="_blank" rel="noopener">
+      <video src="/SuhailiService.mp4" autoplay muted loop playsinline></video>
+      <div class="fpanel-info">
+        <span class="fpanel-label">Service &amp; Facility</span>
+        <h2 class="fpanel-name fpanel-name-svc">Suhaili<br>Services</h2>
+        <div class="marrow">Enter <svg viewBox="0 0 22 10"><line x1="0" y1="5" x2="20" y2="5"/><polyline points="15,1 20,5 15,9"/></svg></div>
+      </div>
+    </a>
+    <a class="fpanel" href="https://www.suhaili-security.de/" target="_blank" rel="noopener">
+      <video src="/SuhailiSecurity.mp4" autoplay muted loop playsinline></video>
+      <div class="fpanel-info">
+        <span class="fpanel-label">Security Solutions</span>
+        <h2 class="fpanel-name fpanel-name-sec">Suhaili<br>Security</h2>
+        <div class="marrow">Enter <svg viewBox="0 0 22 10"><line x1="0" y1="5" x2="20" y2="5"/><polyline points="15,1 20,5 15,9"/></svg></div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
