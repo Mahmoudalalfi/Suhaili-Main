@@ -537,7 +537,18 @@ a { color: inherit; }
 }
 
 .overview-detail { line-height: 1.5; }
-.overview-arrow { justify-self: end; font-size: 20px; }
+.overview-arrow {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.overview-arrow svg {
+  width: 20px;
+  height: 20px;
+}
 
 #site-footer {
   position: relative;
