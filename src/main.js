@@ -1,7 +1,107 @@
 import Lenis from 'lenis';
 
+const translations = {
+  en: {
+    heroServices: 'Facility services.',
+    heroSecurity: 'Professional security.',
+    heroIntro: 'Two specialist companies. One accountable group.',
+    serviceCardDesc: 'Facility management and building operations.',
+    securityCardDesc: 'Professional protection for people and property.',
+    visitWebsite: 'Visit website',
+    aboutGroup: 'About the group',
+    overviewTitle: 'Two disciplines.<br />One standard of work.',
+    serviceOverview: 'Suhaili Service provides cleaning, staffing, transport, logistics, construction support and facility services.',
+    securityOverview: 'Suhaili Security protects properties, people and events through trained personnel, CCTV monitoring, mobile patrols and specialist security services.',
+    factCleaningTitle: 'Cleaning & facility',
+    factCleaningText: 'Building cleaning, caretaker services and facility management',
+    factLogisticsTitle: 'Logistics & staffing',
+    factLogisticsText: 'Transport, warehousing and personnel support',
+    factPropertyTitle: 'Property & events',
+    factPropertyText: 'Property protection and event security',
+    factCctvTitle: 'CCTV & patrols',
+    factCctvText: 'Video monitoring and mobile patrol services',
+    servicesName: 'Services',
+    servicesDetail: 'Cleaning · Logistics & warehousing · Staffing · Facility management',
+    securityName: 'Security',
+    securityDetail: 'Property protection · Event security · CCTV · Mobile patrols',
+    footerConnect: 'Connect with Suhaili',
+    description: 'Suhaili Group brings together professional facility management and security solutions through Suhaili Services and Suhaili Security.',
+  },
+  de: {
+    heroServices: 'Gebäudeservice.',
+    heroSecurity: 'Professionelle Sicherheit.',
+    heroIntro: 'Zwei spezialisierte Unternehmen. Eine verantwortliche Gruppe.',
+    serviceCardDesc: 'Facility Management und Gebäudebetrieb.',
+    securityCardDesc: 'Professioneller Schutz für Menschen und Objekte.',
+    visitWebsite: 'Website besuchen',
+    aboutGroup: 'Über die Gruppe',
+    overviewTitle: 'Zwei Fachbereiche.<br />Ein gemeinsamer Anspruch.',
+    serviceOverview: 'Suhaili Service bietet Reinigung, Personaldienstleistungen, Transport, Logistik, Bausupport und Facility Management.',
+    securityOverview: 'Suhaili Security schützt Objekte, Personen und Veranstaltungen durch geschultes Personal, Videoüberwachung, Streifendienst und spezialisierte Sicherheitsleistungen.',
+    factCleaningTitle: 'Reinigung & Facility',
+    factCleaningText: 'Gebäudereinigung, Hausmeisterdienste und Facility Management',
+    factLogisticsTitle: 'Logistik & Personal',
+    factLogisticsText: 'Transport, Lager und Personalunterstützung',
+    factPropertyTitle: 'Objekte & Veranstaltungen',
+    factPropertyText: 'Objektschutz und Veranstaltungsschutz',
+    factCctvTitle: 'Video & Streifendienst',
+    factCctvText: 'Videoüberwachung und mobile Kontrolldienste',
+    servicesName: 'Dienstleistungen',
+    servicesDetail: 'Reinigung · Logistik & Lager · Personal · Facility Management',
+    securityName: 'Sicherheit',
+    securityDetail: 'Objektschutz · Veranstaltungsschutz · Videoüberwachung · Streifendienst',
+    footerConnect: 'Kontakt zu Suhaili',
+    description: 'Die Suhaili Group vereint professionelles Facility Management und Sicherheitslösungen von Suhaili Service und Suhaili Security.',
+  },
+};
+
+const languageToggle = document.getElementById('language-toggle');
+
+function applyLanguage(language) {
+  const copy = translations[language];
+  document.documentElement.lang = language;
+
+  document.querySelectorAll('[data-i18n]').forEach((element) => {
+    const value = copy[element.dataset.i18n];
+    if (value) element.textContent = value;
+  });
+
+  document.querySelectorAll('[data-i18n-html]').forEach((element) => {
+    const value = copy[element.dataset.i18nHtml];
+    if (value) element.innerHTML = value;
+  });
+
+  document.querySelector('meta[name="description"]')?.setAttribute('content', copy.description);
+  document.querySelector('meta[property="og:description"]')?.setAttribute('content', copy.description);
+  document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', copy.description);
+
+  if (languageToggle) {
+    const switchingToGerman = language === 'en';
+    languageToggle.querySelector('.flag-de').hidden = language !== 'de';
+    languageToggle.querySelector('.flag-us').hidden = language !== 'en';
+    languageToggle.querySelector('.language-code').textContent = switchingToGerman ? 'DE' : 'EN';
+    languageToggle.setAttribute('aria-label', switchingToGerman ? 'Switch to German' : 'Switch to English');
+    languageToggle.dataset.language = language;
+  }
+}
+
+let savedLanguage = 'en';
+try {
+  savedLanguage = localStorage.getItem('suhaili-language') === 'de' ? 'de' : 'en';
+} catch {}
+
+applyLanguage(savedLanguage);
+
+languageToggle?.addEventListener('click', () => {
+  const nextLanguage = languageToggle.dataset.language === 'en' ? 'de' : 'en';
+  applyLanguage(nextLanguage);
+  try {
+    localStorage.setItem('suhaili-language', nextLanguage);
+  } catch {}
+});
+
 const lenis = new Lenis({
-  duration: 1.2,
+  duration: 1.05,
   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
 });
 
@@ -9,94 +109,9 @@ function raf(time) {
   lenis.raf(time);
   requestAnimationFrame(raf);
 }
+
 requestAnimationFrame(raf);
 
-const testimonials = [
-  { name: 'Klaus Bauer',    handle: '@klausbauer', body: 'Suhaili Services transformed our facility management — reliable, professional, and always on time.', img: 'https://randomuser.me/api/portraits/men/34.jpg',   flag: '🇩🇪', country: 'Germany'     },
-  { name: 'Amira Hassan',   handle: '@amiraH',     body: 'Outstanding security team. We feel protected around the clock thanks to Suhaili Security.',          img: 'https://randomuser.me/api/portraits/women/44.jpg', flag: '🇪🇬', country: 'Egypt'       },
-  { name: 'Pierre Dubois',  handle: '@pierre_d',   body: 'Exceptional cleaning and maintenance service. Our office has never looked better.',                   img: 'https://randomuser.me/api/portraits/men/22.jpg',   flag: '🇫🇷', country: 'France'      },
-  { name: 'Sofia Muller',   handle: '@sofiam',     body: 'Their security guards are well-trained and courteous — perfect for corporate events.',                img: 'https://randomuser.me/api/portraits/women/55.jpg', flag: '🇦🇹', country: 'Austria'     },
-  { name: 'Omar Al-Rashid', handle: '@omar_ar',    body: 'Suhaili Services handles our entire building operations seamlessly.',                                 img: 'https://randomuser.me/api/portraits/men/61.jpg',   flag: '🇦🇪', country: 'UAE'         },
-  { name: 'Laura Schmidt',  handle: '@lauras',     body: 'Fast response, friendly staff, and true professionalism every single visit.',                        img: 'https://randomuser.me/api/portraits/women/32.jpg', flag: '🇨🇭', country: 'Switzerland' },
-  { name: 'Yusuf Kaya',     handle: '@yusufk',     body: 'Night security patrols gave us complete peace of mind for our warehouse.',                           img: 'https://randomuser.me/api/portraits/men/47.jpg',   flag: '🇹🇷', country: 'Turkey'      },
-  { name: 'Elena Petrova',  handle: '@elenapv',    body: 'The facility team is discreet, efficient, and always goes the extra mile.',                          img: 'https://randomuser.me/api/portraits/women/68.jpg', flag: '🇷🇺', country: 'Russia'      },
-  { name: 'Jan de Vries',   handle: '@jandv',      body: 'Contracted Suhaili Security for our retail chain — best decision we made.',                          img: 'https://randomuser.me/api/portraits/men/85.jpg',   flag: '🇳🇱', country: 'Netherlands' },
-  { name: 'Fatima Zahra',   handle: '@fatimaz',    body: 'Top-tier service quality that matches our brand standards perfectly.',                               img: 'https://randomuser.me/api/portraits/women/12.jpg', flag: '🇲🇦', country: 'Morocco'     },
-];
-
-// Build card — portrait photo as avatar, flag emoji next to name
-function buildCard(t) {
-  const card = document.createElement('div');
-  card.className = 't-card';
-
-  const header = document.createElement('div');
-  header.className = 't-card-header';
-
-  // Portrait photo
-  const avatar = document.createElement('img');
-  avatar.className = 't-avatar';
-  avatar.src = t.img;
-  avatar.alt = t.name;
-  avatar.loading = 'lazy';
-  avatar.addEventListener('error', function () { this.style.visibility = 'hidden'; });
-
-  const meta = document.createElement('div');
-  meta.className = 't-card-meta';
-
-  // Name row: "Klaus Bauer 🇩🇪"
-  const nameEl = document.createElement('span');
-  nameEl.className = 't-card-name';
-  nameEl.appendChild(document.createTextNode(t.name + ' '));
-
-  const flagEl = document.createElement('span');
-  flagEl.className = 't-card-flag';
-  flagEl.textContent = t.flag;
-  flagEl.setAttribute('role', 'img');
-  flagEl.setAttribute('aria-label', t.country);
-  nameEl.appendChild(flagEl);
-
-  const handleEl = document.createElement('span');
-  handleEl.className = 't-card-handle';
-  handleEl.textContent = t.handle;
-
-  meta.appendChild(nameEl);
-  meta.appendChild(handleEl);
-
-  header.appendChild(avatar);
-  header.appendChild(meta);
-
-  const bodyEl = document.createElement('p');
-  bodyEl.className = 't-card-body';
-  bodyEl.textContent = '"' + t.body + '"';
-
-  card.appendChild(header);
-  card.appendChild(bodyEl);
-  return card;
-}
-
-// 10 testimonials split across 4 columns with enough variety per column
-const COL_A = testimonials.slice(0, 5);                                    // 0-4
-const COL_B = testimonials.slice(5, 10);                                   // 5-9
-const COL_C = [...testimonials.slice(2, 7)];                               // 2-6
-const COL_D = [...testimonials.slice(7, 10), ...testimonials.slice(0, 3)]; // 7-9 + 0-2
-const COLS  = [COL_A, COL_B, COL_C, COL_D];
-
-// Populate columns — cards tripled so the -33.333% loop never shows a seam
-function initTestimonials() {
-  const cols = document.querySelectorAll('.tcol');
-  if (!cols.length) return;
-  cols.forEach(function (col, i) {
-    const track = col.querySelector('.ttrack');
-    const items = COLS[i] || COLS[0];
-    for (let pass = 0; pass < 3; pass++) {
-      items.forEach(function (t) { track.appendChild(buildCard(t)); });
-    }
-  });
-}
-
-initTestimonials();
-
-// Scroll cue: fade out once user starts scrolling
 const scrollCue = document.getElementById('scroll-cue');
 if (scrollCue) {
   lenis.on('scroll', ({ scroll }) => {
@@ -104,63 +119,53 @@ if (scrollCue) {
   });
 }
 
-// Testimonials fade-in — make visible immediately if already in viewport on load
-const testiSection = document.getElementById('testimonials');
-if (testiSection) {
-  const showTesti = function () {
-    testiSection.classList.add('visible');
-  };
-  const rect = testiSection.getBoundingClientRect();
-  if (rect.top < window.innerHeight) {
-    // Already visible on load (e.g. browser restored scroll position)
-    showTesti();
-  } else {
-    const observer = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) {
-        showTesti();
-        observer.disconnect();
-      }
-    }, { threshold: 0 });
-    observer.observe(testiSection);
-  }
-}
+document.querySelectorAll('#bg-split video').forEach((video) => {
+  video.muted = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
 
-// Force all background videos to play — iOS Safari requires these attributes set via JS
-document.querySelectorAll('#bg-split video').forEach(function (vid) {
-  vid.muted = true;
-  vid.setAttribute('playsinline', '');
-  vid.setAttribute('webkit-playsinline', '');
-  vid.load();
-  var tryPlay = function () {
-    var p = vid.play();
-    if (p !== undefined) {
-      p.catch(function () {});
-    }
+  const tryPlay = () => {
+    const playback = video.play();
+    if (playback) playback.catch(() => {});
   };
+
   tryPlay();
   document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
   document.addEventListener('click', tryPlay, { once: true });
 });
 
-// Hero background split interactions
 const bgSplit = document.getElementById('bg-split');
-const cardSvc = document.getElementById('card-svc');
-const cardSec = document.getElementById('card-sec');
+const cardsContainer = document.getElementById('cards');
+const cards = [
+  { element: document.getElementById('card-svc'), className: 'hover-left' },
+  { element: document.getElementById('card-sec'), className: 'hover-right' },
+];
 
-cardSvc.addEventListener('mouseenter', () => { bgSplit.classList.add('hover-left');  bgSplit.classList.remove('hover-right'); });
-cardSvc.addEventListener('mouseleave', () => { bgSplit.classList.remove('hover-left'); });
-cardSec.addEventListener('mouseenter', () => { bgSplit.classList.add('hover-right'); bgSplit.classList.remove('hover-left'); });
-cardSec.addEventListener('mouseleave', () => { bgSplit.classList.remove('hover-right'); });
+let activeSide = '';
 
-// Ripple effect on liquid metal buttons
-document.querySelectorAll('.lm-btn').forEach(btn => {
-  btn.addEventListener('click', e => {
-    const r = document.createElement('span');
-    r.className = 'lm-ripple';
-    const rect = btn.getBoundingClientRect();
-    r.style.left = (e.clientX - rect.left) + 'px';
-    r.style.top  = (e.clientY - rect.top)  + 'px';
-    btn.appendChild(r);
-    setTimeout(() => r.remove(), 600);
+function setActiveSide(className = '') {
+  if (className === activeSide) return;
+  activeSide = className;
+
+  [bgSplit, cardsContainer].forEach((element) => {
+    if (!element) return;
+    element.classList.remove('hover-left', 'hover-right');
+    if (className) element.classList.add(className);
   });
+}
+
+if (cardsContainer && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  cardsContainer.addEventListener('pointermove', (event) => {
+    if (window.innerWidth <= 700) return;
+    const bounds = cardsContainer.getBoundingClientRect();
+    setActiveSide(event.clientX < bounds.left + bounds.width / 2 ? 'hover-left' : 'hover-right');
+  });
+
+  cardsContainer.addEventListener('pointerleave', () => setActiveSide());
+}
+
+cards.forEach(({ element, className }) => {
+  if (!element) return;
+  element.addEventListener('focus', () => setActiveSide(className));
+  element.addEventListener('blur', () => setActiveSide());
 });
